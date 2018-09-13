@@ -6,8 +6,9 @@ import LoginPage from './components/pages/LoginPage';
 // App will serve as a Route Dispatcher
 // ie, basically it renders things dependent on the route
 
+// className ui container wraps and creates a margin for the components
 const App = () => 
-  <div>
+  <div className='ui container'> 
     <Route path="/" exact component={HomePage} />
     <Route path="/login" exact component={LoginPage} />
   </div>
