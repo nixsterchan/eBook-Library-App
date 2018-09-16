@@ -1,7 +1,7 @@
 // The Form component will have state which means there will be class components here
 
 import React, { Component } from 'react';
-import { Form, Button } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic-ui-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
 import PropTypes from 'prop-types';
@@ -41,8 +41,9 @@ class LoginForm extends Component {
         // To check if errors object is empty
         // can use lodash is empty method
         if (Object.keys(errors).length === 0) { // Takes all the keys and errors objects
-            this.props.submit(this.state.data); // As submit is not defined, use proptypes
-            // Catch errors from asynchornous comes next
+            this.setState( { loading: true } );
+            this.props.submit(this.state.data) // As submit is not defined, use proptypes
+            .catch(err => this.setState({ errors: err.response.data.errors, loading: false })); // Catches and displays errors
         }
     };
 
@@ -60,9 +61,15 @@ class LoginForm extends Component {
     // this line means that if there is something in the errors object, we will then do <InlineError /> statement
     render() {
         // deconstruct
-        const { data, errors } = this.state;
+        const { data, errors, loading } = this.state;
         return (
-            <Form onSubmit={this.onSubmit}>
+            <Form onSubmit={this.onSubmit} loading={loading}>
+                { errors.global && 
+                    <Message negative>
+                        <Message.Header>Something Went Wrong...</Message.Header>
+                        <p>{errors.global}</p>
+                    </Message>
+                }
                 <Form.Field error={!!errors.email}>
                     <label htmlFor="email">Email</label>
                     <input 
