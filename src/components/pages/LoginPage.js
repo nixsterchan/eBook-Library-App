@@ -14,7 +14,7 @@ class LoginPage extends Component {
     // Function here is used in LoginForm
     // We have login thunk action where we pass data to it and it returns a promise, If everything is okay, we redirect to HomePage
     submit = (data) => this.props.login(data)
-        .then(() => this.props.history.push("/"));
+        .then(() => this.props.history.push("/dashboard"));
           // We redirect by using history, where history is passed to this component via react router (route component)
     // Login wil be available to use when we connect this component to redux
 
