@@ -1,11 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import * as actions from '../../actions/auth';
 
-const HomePage = () => (
+const HomePage = ({ isAuthenticated, logout }) => (
     <div>
         <h1>Home Page</h1>
-        <Link to="/login">Log In</Link>
+        { isAuthenticated ? <button onClick={() => logout()}>Log Out</button> : <Link to="/login">Log In</Link>}
     </div>
 );
 
-export default HomePage;
+function mapStateToProps(state) {
+    // Takes state and return props available on HomePage
+    // If token is undefined, it will be converted to false or if it is a string, convert to true
+    return {
+        isAuthenticated: !!state.user.token
+    }
+};
+
+HomePage.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired
+};
+
+export default connect(mapStateToProps, { logout: actions.logout })(HomePage);

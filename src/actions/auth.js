@@ -1,11 +1,15 @@
 // Here is where we define our thunk actions (functions that return another function)
 
-import { USER_LOGGED_IN } from '../types';
+import { USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
 import api from '../api';
 
 export const userLoggedIn = (user) => ({
     type: USER_LOGGED_IN,
     user
+});
+
+export const userLoggedOut = () => ({
+    type: USER_LOGGED_OUT
 });
 
 // Take credentials to return another function where we make the API request 
@@ -14,7 +18,14 @@ export const userLoggedIn = (user) => ({
 
 export const login = (credentials) => (dispatch) => 
     api.user.login(credentials) // This line is the API request that returns promise and
-    .then(user => dispatch(userLoggedIn(user))); // We take that promise and data returned from server and we get response data user from it to pass to next action
-                                                 // But in this case, we will do all that in api.js and just go straight to dispatch here
+    .then(user => {
+        localStorage.ebooklibraryJWT = user.token; // Save the token into local storage
+        dispatch(userLoggedIn(user));
+    }); // We take that promise and data returned from server and we get response data user from it to pass to next action
+        // But in this case, we will do all that in api.js and just go straight to dispatch here
 
- 
+export const logout = () => dispatch => {
+    localStorage.removeItem('ebooklibraryJWT');
+    dispatch(userLoggedOut());
+};
+

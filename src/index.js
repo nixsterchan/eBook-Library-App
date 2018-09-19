@@ -9,9 +9,19 @@ import { Provider } from 'react-redux'; // High Order component to connect redux
 import thunk from 'redux-thunk';
 import rootReducer from './rootReducer';
 import { composeWithDevTools } from 'redux-devtools-extension'; // wrapper for applyMiddleware
+import { userLoggedIn } from './actions/auth';
 
 // Create redux store ( 2 arguments, rootreducer which is the whole tree, or state object, and applyMiddleware)
-const storage = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk))); 
+const storage = createStore(
+    rootReducer, 
+    composeWithDevTools(applyMiddleware(thunk))
+); 
+
+// Whenever we refresh page, we dispatch the action from storage
+if (localStorage.ebooklibraryJWT) {
+    const user = { token: localStorage.ebooklibraryJWT };
+    storage.dispatch(userLoggedIn(user));
+};
 
 ReactDOM.render(
     <BrowserRouter>

@@ -5,5 +5,5 @@ import user from './reducers/user';
 // Reducers are functions that take state and return new state
 // Takes the object
 export default combineReducers({
-    
+    user
 });
